@@ -30,7 +30,9 @@
             :current-room :entrance})
 
 (defn get-unexplored-room [{unexplored :unexplored}]
-  (first (shuffle unexplored)))
+  (let [shuffled (shuffle unexplored)]
+    [(first shuffled)
+     (rest shuffled)]))
 
 (defn update-rooms [state current-room new-room dir]
   (assoc-in state [:rooms current-room dir] (:name new-room)))
@@ -50,13 +52,14 @@
     (case (direction current-room)
 
       :unexplored
-      (let [new-room (get-unexplored-room state)]
-        (update-rooms [state (:name current-room) (:name new-room) direction])))
+      (let [[new-room unexplored] (get-unexplored-room state)]
+        (-> state
+            (assoc-in [:rooms (:name current-room) direction] (:name new-room))
+            (assoc :unexplored unexplored)))
 
 
       ;; else
-      state
-    ))
+      state)))
 
 (defn -main
   "I don't do a whole lot ... yet."
