@@ -35,6 +35,15 @@
 (defn update-rooms [state current-room new-room dir]
   (assoc-in state [:rooms current-room dir] (:name new-room)))
 
+(defn get-current-room [state]
+  ((:rooms state) (:current-room state)))
+
+(defn get-available-moves [state]
+  (let [current-room (get-current-room state)]
+    { :up (:up current-room)
+     :down (:down current-room)
+     :left (:left current-room)
+     :right (:right current-room)}))
 
 (defn move [state direction]
   (let [current-room ((:rooms state) (:current-room state))]
