@@ -47,6 +47,13 @@
      :left (:left current-room)
      :right (:right current-room)}))
 
+(defn opposite-direction [direction]
+  (case direction
+    :up :down
+    :down :up
+    :left :right
+    :right :left))
+
 (defn move [state direction]
   (let [current-room ((:rooms state) (:current-room state))]
     (case (direction current-room)
@@ -55,6 +62,8 @@
       (let [[new-room unexplored] (get-unexplored-room state)]
         (-> state
             (assoc-in [:rooms (:name current-room) direction] (:name new-room))
+            (assoc-in [:rooms (:name new-room) (opposite-direction direction)] (:name current-room))
+            (assoc :current-room (:name new-room))
             (assoc :unexplored unexplored)))
 
 
