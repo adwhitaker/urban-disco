@@ -14,6 +14,10 @@
   ([height] 
    (let [grid (range height)]
      (map #(build-row height %) grid))))
+
+(defn get-tile [grid x y]
+  (nth (nth grid y) x))
+
 (def state {:rooms
 
             {:entrance {:name      :entrance
