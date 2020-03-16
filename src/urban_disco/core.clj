@@ -18,6 +18,15 @@
 (defn get-tile [grid x y]
   (nth (nth grid y) x))
 
+(defn calc-vector-center [grid]
+  (-> grid count dec (/ 2) Math/ceil int))
+
+(defn grid-center [grid]
+  (let [x (calc-vector-center grid)
+        y (calc-vector-center (first grid))]
+    (get-tile grid x y)))
+
+
 (def state {:rooms
 
             {:entrance {:name      :entrance
