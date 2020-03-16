@@ -9,6 +9,11 @@
   (let [row (range width)]
     (map #(build-tile % row-number) row)))
 
+(defn build-grid
+  ([] (build-grid 5))
+  ([height] 
+   (let [grid (range height)]
+     (map #(build-row height %) grid))))
 (def state {:rooms
 
             {:entrance {:name      :entrance
