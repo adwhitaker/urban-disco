@@ -1,7 +1,13 @@
 (ns urban-disco.core
   (:gen-class))
 
+(defn build-tile [x, y] 
+  {:x x
+   :y y})
 
+(defn build-row [width row-number]
+  (let [row (range width)]
+    (map #(build-tile % row-number) row)))
 
 (def state {:rooms
 
