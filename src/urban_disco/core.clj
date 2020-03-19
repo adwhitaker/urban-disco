@@ -40,8 +40,8 @@
   (get tile :explored))
 
 (defn set-tile-explored [grid tile]
-  (let [x (get tile :x)
-        y (get tile :y)]
+  (let [x (:x tile)
+        y (:y tile)]
     (assoc-in grid [y x :explored] true)))
 
 (defn state-grid [state]
