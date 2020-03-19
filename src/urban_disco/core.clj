@@ -44,8 +44,21 @@
         y (get tile :y)]
     (assoc-in grid [y x :explored] true)))
 
+(defn state-grid [state]
+  (get @state :grid))
+
+(defn explore-tile [state tile]
+  (swap! state assoc :grid (set-tile-explored (state-grid state) tile)))
+
+(defn set-current-tile [state x y]
+  (swap! state assoc :current-position (get-tile (state-grid state) x y)))
+
 (def base-grid (set-tile-explored (build-grid) (calc-starting-tile)))
 (def starting-position (grid-center base-grid))
+
+(def state (atom {
+                  :grid             base-grid
+                  :current-position starting-position}))
 
 (defn -main
   "I don't do a whole lot ... yet."
