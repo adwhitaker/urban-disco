@@ -8,13 +8,13 @@
 
 (defn build-row [width row-number]
   (let [row (range width)]
-    (map #(build-tile % row-number) row)))
+    (into [] (map #(build-tile % row-number) row))))
 
 (defn build-grid
   ([] (build-grid 5))
   ([height] 
    (let [grid (range height)]
-     (map #(build-row height %) grid))))
+     (into [] (map #(build-row height %) grid)))))
 
 (defn get-tile [grid x y]
   (nth (nth grid y) x))
