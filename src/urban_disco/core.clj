@@ -1,9 +1,10 @@
 (ns urban-disco.core
   (:gen-class))
 
-(defn build-tile [x, y] 
-  {:x x
-   :y y})
+(defn build-tile [x y] 
+  {:x        x
+   :y        y
+   :explored false})
 
 (defn build-row [width row-number]
   (let [row (range width)]
@@ -25,6 +26,14 @@
   (let [x (calc-vector-center grid)
         y (calc-vector-center (first grid))]
     (get-tile grid x y)))
+
+(defn is-tile-explored [tile]
+  (get tile :explored))
+
+(defn set-tile-explored [grid tile]
+  (let [x (get tile :x)
+        y (get tile :y)]
+    (assoc-in grid [y x :explored] true)))
 
 (defn -main
   "I don't do a whole lot ... yet."
