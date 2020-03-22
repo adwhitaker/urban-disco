@@ -77,7 +77,15 @@
       state)))
 
 (defn move-right [state]
-  state)
+  (let [grid-width (count (get-in state [:grid 0]))
+        y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-x (+ x 1)]
+    (if (< new-x grid-width)
+      (-> state
+          (explore-tile new-x y)
+          (set-current-tile new-x y))
+      state)))
 
 (defn move [state direction]
   (case direction
