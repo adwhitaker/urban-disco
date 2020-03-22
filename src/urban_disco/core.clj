@@ -39,14 +39,11 @@
 (defn is-tile-explored [tile]
   (get tile :explored))
 
-(defn set-tile-explored [grid x y]
-  (assoc-in grid [y x :explored] true))
-
 (defn explore-tile [state x y]
   (assoc-in state [:grid y x :explored] true))
 
 (defn set-current-tile [state x y]
-  (assoc state :current-position (get-tile (:grid state) x y)))
+  (assoc state :current-position (get-in state [:grid y x])))
 
 (defn move-up [state]
   (let [y (get-in state [:current-position :y])
@@ -64,7 +61,13 @@
     (move-up state)
     state))
 
-(def base-grid (set-tile-explored (build-grid) 2 2))
+
+(defn set-tile-explored [grid x y]
+  (assoc-in grid [y x :explored] true))
+
+(def center (calc-starting-tile))
+
+(def base-grid (set-tile-explored (build-grid) (:x center) (:y center)))
 (def starting-position (grid-center base-grid))
 
 (def state {
