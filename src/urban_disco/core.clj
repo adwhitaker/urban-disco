@@ -1,14 +1,18 @@
 (ns urban-disco.core
   (:gen-class))
 
-(defn build-tile [x y] 
+(defn build-tile [x y grid-height] 
   {:x        x
    :y        y
-   :explored false})
+   :explored false
+   :up (if (= y 0) :wall :door)
+   :down (if (= (+ y 1) grid-height) :wall :door)
+   :left (if (= x 0) :wall :door)
+   :right (if (= (+ x 1) grid-height) :wall :door)})
 
 (defn build-row [width row-number]
   (let [row (range width)]
-    (into [] (map #(build-tile % row-number) row))))
+    (into [] (map #(build-tile % row-number width) row))))
 
 (defn build-grid
   ([] (build-grid 5))
