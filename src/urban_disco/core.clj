@@ -5,10 +5,10 @@
   {:x        x
    :y        y
    :explored false
-   :up (if (= y 0) :wall :door)
-   :down (if (= (+ y 1) grid-height) :wall :door)
-   :left (if (= x 0) :wall :door)
-   :right (if (= (+ x 1) grid-height) :wall :door)})
+   :up       (if (= y 0) :wall :door)
+   :down     (if (= (+ y 1) grid-height) :wall :door)
+   :left     (if (= x 0) :wall :door)
+   :right    (if (= (+ x 1) grid-height) :wall :door)})
 
 (defn build-row [width row-number]
   (let [row (range width)]
