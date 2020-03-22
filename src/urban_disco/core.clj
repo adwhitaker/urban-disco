@@ -64,8 +64,20 @@
       (-> state
           (explore-tile x new-y)
           (set-current-tile x new-y))
-      state))
-)
+      state)))
+
+(defn move-left [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-x (- x 1)]
+    (if (> x 0)
+      (-> state
+          (explore-tile new-x y)
+          (set-current-tile new-x y))
+      state)))
+
+(defn move-right [state]
+  state)
 
 (defn move [state direction]
   (case direction
@@ -73,6 +85,10 @@
     (move-up state)
     :down
     (move-down state)
+    :left
+    (move-left state)
+    :right
+    (move-right state)
     state))
 
 
