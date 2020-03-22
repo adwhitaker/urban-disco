@@ -39,26 +39,37 @@
 (defn is-tile-explored [tile]
   (get tile :explored))
 
-(defn set-tile-explored [grid tile]
-  (let [x (:x tile)
-        y (:y tile)]
-    (assoc-in grid [y x :explored] true)))
+(defn set-tile-explored [grid x y]
+  (assoc-in grid [y x :explored] true))
 
-(defn state-grid [state]
-  (get @state :grid))
-
-(defn explore-tile [state tile]
-  (swap! state assoc :grid (set-tile-explored (state-grid state) tile)))
+(defn explore-tile [state x y]
+  (assoc-in state [:grid y x :explored] true))
 
 (defn set-current-tile [state x y]
-  (swap! state assoc :current-position (get-tile (state-grid state) x y)))
+  (assoc state :current-position (get-tile (:grid state) x y)))
 
-(def base-grid (set-tile-explored (build-grid) (calc-starting-tile)))
+(defn move-up [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-y (- y 1)]
+    (if (> y 0)
+      (-> state
+          (explore-tile x new-y)
+          (set-current-tile x new-y))
+      state)))
+
+(defn move [state direction]
+  (case direction
+    :up
+    (move-up state)
+    state))
+
+(def base-grid (set-tile-explored (build-grid) 2 2))
 (def starting-position (grid-center base-grid))
 
-(def state (atom {
-                  :grid             base-grid
-                  :current-position starting-position}))
+(def state {
+            :grid             base-grid
+            :current-position starting-position})
 
 (defn -main
   "I don't do a whole lot ... yet."
