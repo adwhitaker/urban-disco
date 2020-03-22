@@ -52,19 +52,20 @@
 (defn move-up [state]
   (let [y (get-in state [:current-position :y])
         x (get-in state [:current-position :x])
-        new-y (- y 1)]
-    (if (> y 0)
+        new-y (- y 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:up tile) :door)
       (-> state
           (explore-tile x new-y)
           (set-current-tile x new-y))
       state)))
 
 (defn move-down [state]
-  (let [grid-height (count (:grid state))
-        y (get-in state [:current-position :y])
+  (let [y (get-in state [:current-position :y])
         x (get-in state [:current-position :x])
-        new-y (+ y 1)]
-    (if (< new-y grid-height)
+        new-y (+ y 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:down tile) :door)
       (-> state
           (explore-tile x new-y)
           (set-current-tile x new-y))
@@ -73,19 +74,20 @@
 (defn move-left [state]
   (let [y (get-in state [:current-position :y])
         x (get-in state [:current-position :x])
-        new-x (- x 1)]
-    (if (> x 0)
+        new-x (- x 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:left tile) :door)
       (-> state
           (explore-tile new-x y)
           (set-current-tile new-x y))
       state)))
 
 (defn move-right [state]
-  (let [grid-width (count (get-in state [:grid 0]))
-        y (get-in state [:current-position :y])
+  (let [y (get-in state [:current-position :y])
         x (get-in state [:current-position :x])
-        new-x (+ x 1)]
-    (if (< new-x grid-width)
+        new-x (+ x 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:left tile) :door)
       (-> state
           (explore-tile new-x y)
           (set-current-tile new-x y))
