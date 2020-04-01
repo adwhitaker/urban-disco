@@ -1,6 +1,14 @@
 (ns grid-builder.core
   (:gen-class))
 
+(defn index [x, y, columns]
+  (if (or (< x 0) 
+          (< y 0) 
+          (> x (- columns 1)) 
+          (> y (- columns 1)))
+    -1
+    (+ (* x columns) y)))
+
 (defn build-tile [x y grid-height] 
   {:x        x
    :y        y
