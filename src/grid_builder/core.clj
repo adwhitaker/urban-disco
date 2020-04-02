@@ -71,15 +71,19 @@
           []
           cells))
 
+(defn rand-unexplored-neighbor [cells grid]
+  (let [rand-cell (rand-nth (tiles-with-unexplored-neighbors cells grid))]
+    (unexplored-neighbor rand-cell grid)))
+
 (defn generate-rooms [grid start-tile goal-tile]
   (loop [start [start-tile]
          goal [goal-tile]
          unexplored (-> grid (remove-tile start-tile) (remove-tile goal-tile))]
     (if (empty? unexplored)
-      unexplored
-      (let [st 3
-            gt 3]
-       (recur (conj start st) (conj goal gt) unexplored)))))
+      start
+      (let [st (rand-unexplored-neighbor start grid)
+            gt (rand-unexplored-neighbor goal  grid)]
+       (recur (conj start st) (conj goal gt) (-> unexplored (remove-tile st) (remove-tile gt)))))))
 
 
 (def start-tile {
