@@ -49,17 +49,37 @@
             [top right bottom left])))
 
 (defn unexplored-neighbor [tile grid]
-  (let [neighbors (unexplored-neighbors tile grid)
-        neighbors-count (count neighbors)]
-    (if (pos? neighbors-count)
+  (let [neighbors (unexplored-neighbors tile grid)]
+    (if (not-empty neighbors)
       (first (shuffle neighbors))
       nil)))
 
-(defn generate-rooms [grid]
-  (loop [unexplored grid]
-    (if (zero? (count unexplored))
+(defn remove-tile [unexplored tile]
+  (reduce (fn [out item]
+            (if (and (= (:x item) (:x tile)) (= (:y item) (:y tile)))
+              out
+              (conj out item)))
+          []
+          unexplored))
+
+(defn tiles-with-unexplored-neighbors [cells grid]
+  (reduce (fn [out cell]
+            (let [neighbors (unexplored-neighbors cell grid)]
+              (if (empty? neighbors)
+                out
+                (conj out cell))))
+          []
+          cells))
+
+(defn generate-rooms [grid start-tile goal-tile]
+  (loop [start [start-tile]
+         goal [goal-tile]
+         unexplored (-> grid (remove-tile start-tile) (remove-tile goal-tile))]
+    (if (empty? unexplored)
       unexplored
-      (recur (pop unexplored)))))
+      (let [st 3
+            gt 3]
+       (recur (conj start st) (conj goal gt) unexplored)))))
 
 
 (def start-tile {
