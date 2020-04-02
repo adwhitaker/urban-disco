@@ -65,9 +65,9 @@
 (defn tiles-with-unexplored-neighbors [cells grid]
   (reduce (fn [out cell]
             (let [neighbors (unexplored-neighbors cell grid)]
-              (if (empty? neighbors)
-                out
-                (conj out cell))))
+              (if (not-empty neighbors)
+                (conj out cell)
+                out)))
           []
           cells))
 
