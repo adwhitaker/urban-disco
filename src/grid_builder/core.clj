@@ -1,6 +1,8 @@
 (ns grid-builder.core
   (:gen-class))
 
+(def grid-height-width 5)
+
 (defn index [x, y, columns]
   (if (or (< x 0) 
           (< y 0) 
@@ -24,7 +26,7 @@
     (into [] (map #(build-tile % row-number width) row))))
 
 (defn build-grid
-  ([] (build-grid 5))
+  ([] (build-grid grid-height-width))
   ([height] 
    (let [grid (range height)]
      (into [] (map #(build-row height %) grid)))))
@@ -35,16 +37,24 @@
   (nil? (:group tile)))
 
 (defn unexplored-neighbors [tile grid]
-  (let [top    (index (:x tile)       (- (:y tile) 1) 5)
-        right  (index (+ 1 (:x tile)) (:y tile)       5)
-        bottom (index (:x tile)       (+ 1 (:y tile)) 5)
-        left   (index (- (:x tile) 1) (:y tile)       5)]
+  (let [top    (index (:x tile)       (- (:y tile) 1) grid-height-width)
+        right  (index (+ 1 (:x tile)) (:y tile)       grid-height-width)
+        bottom (index (:x tile)       (+ 1 (:y tile)) grid-height-width)
+        left   (index (- (:x tile) 1) (:y tile)       grid-height-width)]
     (reduce (fn [out neighbor-index]
               (if (and (>= neighbor-index 0) (nil-group? (nth grid neighbor-index)))
                 (conj out (nth grid neighbor-index))
                 out))
             []
             [top right bottom left])))
+
+(defn unexplored-neighbor [tile grid]
+  (let [neighbors (unexplored-neighbors tile grid)
+        neighbors-count (count neighbors)]
+    (if (pos? neighbors-count)
+      (first (shuffle neighbors))
+      nil)))
+
 (defn generate-rooms [grid]
   (loop [unexplored grid]
     (if (zero? (count unexplored))
