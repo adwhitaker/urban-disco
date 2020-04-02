@@ -75,15 +75,26 @@
   (let [rand-cell (rand-nth (tiles-with-unexplored-neighbors cells grid))]
     (unexplored-neighbor rand-cell grid)))
 
+(defn update-group [grid tile group]
+  (let [t-index (index (:x tile) (:y tile) grid-height-width)]
+    (assoc-in grid [t-index :group] group)))
+
 (defn generate-rooms [grid start-tile goal-tile]
   (loop [start [start-tile]
          goal [goal-tile]
-         unexplored (-> grid (remove-tile start-tile) (remove-tile goal-tile))]
+         unexplored (-> grid (remove-tile start-tile) (remove-tile goal-tile))
+         gridz grid]
     (if (empty? unexplored)
-      start
-      (let [st (rand-unexplored-neighbor start grid)
-            gt (rand-unexplored-neighbor goal  grid)]
-       (recur (conj start st) (conj goal gt) (-> unexplored (remove-tile st) (remove-tile gt)))))))
+      {:start start
+       :goal  goal}
+      (let [st (rand-unexplored-neighbor start gridz)
+            gt (rand-unexplored-neighbor goal  gridz)
+            ]
+       (recur 
+        (conj start st) 
+        (conj goal gt) 
+        (-> unexplored (remove-tile st) (remove-tile gt)) 
+        (-> gridz (update-group st :start) (update-group gt :goal)))))))
 
 
 (def start-tile {
