@@ -1,14 +1,18 @@
 (ns urban-disco.core
   (:gen-class))
 
-(defn build-tile [x y] 
+(defn build-tile [x y grid-height] 
   {:x        x
    :y        y
-   :explored false})
+   :explored false
+   :up       (if (= y 0) :wall :door)
+   :down     (if (= (+ y 1) grid-height) :wall :door)
+   :left     (if (= x 0) :wall :door)
+   :right    (if (= (+ x 1) grid-height) :wall :door)})
 
 (defn build-row [width row-number]
   (let [row (range width)]
-    (into [] (map #(build-tile % row-number) row))))
+    (into [] (map #(build-tile % row-number width) row))))
 
 (defn build-grid
   ([] (build-grid 5))
@@ -39,26 +43,80 @@
 (defn is-tile-explored [tile]
   (get tile :explored))
 
-(defn set-tile-explored [grid tile]
-  (let [x (:x tile)
-        y (:y tile)]
-    (assoc-in grid [y x :explored] true)))
-
-(defn state-grid [state]
-  (get @state :grid))
-
-(defn explore-tile [state tile]
-  (swap! state assoc :grid (set-tile-explored (state-grid state) tile)))
+(defn explore-tile [state x y]
+  (assoc-in state [:grid y x :explored] true))
 
 (defn set-current-tile [state x y]
-  (swap! state assoc :current-position (get-tile (state-grid state) x y)))
+  (assoc state :current-position (get-in state [:grid y x])))
 
-(def base-grid (set-tile-explored (build-grid) (calc-starting-tile)))
+(defn move-up [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-y (- y 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:up tile) :door)
+      (-> state
+          (explore-tile x new-y)
+          (set-current-tile x new-y))
+      state)))
+
+(defn move-down [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-y (+ y 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:down tile) :door)
+      (-> state
+          (explore-tile x new-y)
+          (set-current-tile x new-y))
+      state)))
+
+(defn move-left [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-x (- x 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:left tile) :door)
+      (-> state
+          (explore-tile new-x y)
+          (set-current-tile new-x y))
+      state)))
+
+(defn move-right [state]
+  (let [y (get-in state [:current-position :y])
+        x (get-in state [:current-position :x])
+        new-x (+ x 1)
+        tile (get-in state [:grid y x])]
+    (if (= (:left tile) :door)
+      (-> state
+          (explore-tile new-x y)
+          (set-current-tile new-x y))
+      state)))
+
+(defn move [state direction]
+  (case direction
+    :up
+    (move-up state)
+    :down
+    (move-down state)
+    :left
+    (move-left state)
+    :right
+    (move-right state)
+    state))
+
+
+(defn set-tile-explored [grid x y]
+  (assoc-in grid [y x :explored] true))
+
+(def center (calc-starting-tile))
+
+(def base-grid (set-tile-explored (build-grid) (:x center) (:y center)))
 (def starting-position (grid-center base-grid))
 
-(def state (atom {
-                  :grid             base-grid
-                  :current-position starting-position}))
+(def state {
+            :grid             base-grid
+            :current-position starting-position})
 
 (defn -main
   "I don't do a whole lot ... yet."
