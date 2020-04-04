@@ -36,6 +36,7 @@
     (assoc-in grid [t-index direction] true)))
 
 (defn remove-wall [grid a b]
+  "Removes the wall between two grid cells"
   (let [x (- (:x a) (:x b))
         y (- (:y a) (:y b))]
     (cond
