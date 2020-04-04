@@ -3,7 +3,7 @@
 
 (def grid-height-width 5)
 
-(defn index [x, y, columns]
+(defn index [x y columns]
   (if (or (< x 0) 
           (< y 0) 
           (> x (- columns 1)) 
@@ -29,9 +29,7 @@
   ([] (build-grid grid-height-width))
   ([height] 
    (let [grid (range height)]
-     (into [] (map #(build-row height %) grid)))))
-
-(def unexplored-tiles (into [] (flatten (build-grid))))
+     (into [] (flatten (map #(build-row height %) grid))))))
 
 (defn update-direction [grid tile direction]
   (let [t-index (index (:x tile) (:y tile) grid-height-width)]
