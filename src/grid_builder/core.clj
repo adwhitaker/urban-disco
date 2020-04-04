@@ -11,19 +11,19 @@
     -1
     (+ (* y columns) x)))
 
-(defn build-tile [x y grid-height] 
+(defn build-cell [x y] 
   {:x        x
    :y        y
    :explored false
    :group    nil
-   :up       (if (= y 0) :wall :door)
-   :down     (if (= (+ y 1) grid-height) :wall :door)
-   :left     (if (= x 0) :wall :door)
-   :right    (if (= (+ x 1) grid-height) :wall :door)})
+   :up       false
+   :right    false
+   :down     false
+   :left     false})
 
 (defn build-row [width row-number]
   (let [row (range width)]
-    (into [] (map #(build-tile % row-number width) row))))
+    (into [] (map #(build-cell % row-number) row))))
 
 (defn build-grid
   ([] (build-grid grid-height-width))
@@ -33,14 +33,48 @@
 
 (def unexplored-tiles (into [] (flatten (build-grid))))
 
+(defn update-direction [grid tile direction]
+  (let [t-index (index (:x tile) (:y tile) grid-height-width)]
+    (assoc-in grid [t-index direction] true)))
+
+(defn remove-wall [grid a b]
+  (let [x (- (:x a) (:x b))
+        y (- (:y a) (:y b))]
+    (cond
+      (= x 1)  (-> grid (update-direction a :left)  (update-direction b :right))
+      (= x -1) (-> grid (update-direction a :right) (update-direction b :left))
+      (= y 1)  (-> grid (update-direction a :up)    (update-direction b :down))
+      (= y -1) (-> grid (update-direction a :down)  (update-direction b :up)))))
+
 (defn nil-group? [tile]
   (nil? (:group tile)))
 
+(defn same-group? [a b]
+  (= (:group a) (:group b)))
+
+(defn neighbor-indexes [tile grid]
+ {:top    (index (:x tile)       (- (:y tile) 1) grid-height-width)
+  :right  (index (+ 1 (:x tile)) (:y tile)       grid-height-width)
+  :bottom (index (:x tile)       (+ 1 (:y tile)) grid-height-width)
+  :left   (index (- (:x tile) 1) (:y tile)       grid-height-width)})
+
+(defn find-different-groups [tile grid]
+  (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
+    (reduce (fn [out neighbor-index]
+              (if (and (>= neighbor-index 0) (same-group? tile (nth grid neighbor-index)))
+                (conj out (nth grid neighbor-index))
+                out))
+            []
+            [top right bottom left])))
+
+(defn rand-diff-group-neighbor [tile grid]
+  (let [neighbors (find-different-groups tile grid)]
+    (if (not-empty neighbors)
+      (first (shuffle neighbors))
+      nil)))
+
 (defn unexplored-neighbors [tile grid]
-  (let [top    (index (:x tile)       (- (:y tile) 1) grid-height-width)
-        right  (index (+ 1 (:x tile)) (:y tile)       grid-height-width)
-        bottom (index (:x tile)       (+ 1 (:y tile)) grid-height-width)
-        left   (index (- (:x tile) 1) (:y tile)       grid-height-width)]
+  (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
     (reduce (fn [out neighbor-index]
               (if (and (>= neighbor-index 0) (nil-group? (nth grid neighbor-index)))
                 (conj out (nth grid neighbor-index))
@@ -71,30 +105,36 @@
           []
           cells))
 
-(defn rand-unexplored-neighbor [cells grid]
-  (let [rand-cell (rand-nth (tiles-with-unexplored-neighbors cells grid))]
-    (unexplored-neighbor rand-cell grid)))
+(defn rand-w-un-n [cells grid]
+  (rand-nth (tiles-with-unexplored-neighbors cells grid)))
+
+(defn rand-unexplored-neighbor [rand-cell grid]
+  (unexplored-neighbor rand-cell grid))
 
 (defn update-group [grid tile group]
   (let [t-index (index (:x tile) (:y tile) grid-height-width)]
     (assoc-in grid [t-index :group] group)))
 
+(defn join-groups [start goal grid]
+  {:start start
+   :goal  goal})
+
 (defn generate-rooms [grid start-tile goal-tile]
-  (loop [start [start-tile]
-         goal [goal-tile]
+  (loop [start      [start-tile]
+         goal       [goal-tile]
          unexplored (-> grid (remove-tile start-tile) (remove-tile goal-tile))
-         gridz grid]
+         gridz      grid]
     (if (empty? unexplored)
-      {:start start
-       :goal  goal}
-      (let [st (rand-unexplored-neighbor start gridz)
-            gt (rand-unexplored-neighbor goal  gridz)
-            ]
+      (join-groups start goal gridz)
+      (let [rand-st (rand-w-un-n start gridz)
+            rand-gt (rand-w-un-n goal  gridz)
+            st (rand-unexplored-neighbor start gridz)
+            gt (rand-unexplored-neighbor goal  gridz)]
        (recur 
         (conj start st) 
         (conj goal gt) 
         (-> unexplored (remove-tile st) (remove-tile gt)) 
-        (-> gridz (update-group st :start) (update-group gt :goal)))))))
+        (-> gridz (update-group st :start) (update-group gt :goal) (remove-wall rand-st st) (remove-wall rand-gt gt)))))))
 
 
 (def start-tile {
