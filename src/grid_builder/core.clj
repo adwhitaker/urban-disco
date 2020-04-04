@@ -11,26 +11,6 @@
     -1
     (+ (* y columns) x)))
 
-(defn build-cell [x y] 
-  {:x        x
-   :y        y
-   :explored false
-   :group    nil
-   :up       false
-   :right    false
-   :down     false
-   :left     false})
-
-(defn build-row [width row-number]
-  (let [row (range width)]
-    (into [] (map #(build-cell % row-number) row))))
-
-(defn build-grid
-  ([] (build-grid grid-height-width))
-  ([height] 
-   (let [grid (range height)]
-     (into [] (flatten (map #(build-row height %) grid))))))
-
 (defn update-direction [grid tile direction]
   (let [t-index (index (:x tile) (:y tile) grid-height-width)]
     (assoc-in grid [t-index direction] true)))
