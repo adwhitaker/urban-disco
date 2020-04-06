@@ -1,50 +1,7 @@
 (ns urban-disco.core
+  (require [grid-builder.base-grid :as grid-builder]
+           [grid-builder.tile :as tile])
   (:gen-class))
-
-(defn build-tile [x y grid-height] 
-  {:x        x
-   :y        y
-   :explored false
-   :up       (if (= y 0) :wall :door)
-   :down     (if (= (+ y 1) grid-height) :wall :door)
-   :left     (if (= x 0) :wall :door)
-   :right    (if (= (+ x 1) grid-height) :wall :door)})
-
-(defn build-row [width row-number]
-  (let [row (range width)]
-    (into [] (map #(build-tile % row-number width) row))))
-
-(defn build-grid
-  ([] (build-grid 5))
-  ([height] 
-   (let [grid (range height)]
-     (into [] (map #(build-row height %) grid)))))
-
-(defn get-tile [grid x y]
-  (nth (nth grid y) x))
-
-(defn calc-center [height]
-  (-> height dec (/ 2) Math/ceil int))
-
-(defn calc-vector-center [grid]
-  (-> grid count calc-center))
-
-(defn grid-center [grid]
-  (let [x (calc-vector-center grid)
-        y (calc-vector-center (first grid))]
-    (get-tile grid x y)))
-
-(defn calc-starting-tile
-  ([] (calc-starting-tile 5))
-  ([height]
-   (let [center (calc-center height)]
-     {:x center :y center})))
-
-(defn is-tile-explored [tile]
-  (get tile :explored))
-
-(defn explore-tile [state x y]
-  (assoc-in state [:grid y x :explored] true))
 
 (defn set-current-tile [state x y]
   (assoc state :current-position (get-in state [:grid y x])))
@@ -105,13 +62,9 @@
     (move-right state)
     state))
 
+(def center (tile/center (base-grid/build-grid)))
 
-(defn set-tile-explored [grid x y]
-  (assoc-in grid [y x :explored] true))
-
-(def center (calc-starting-tile))
-
-(def base-grid (set-tile-explored (build-grid) (:x center) (:y center)))
+(def base-grid (tile/explore (base-grid/build-grid) (:x center) (:y center)))
 (def starting-position (grid-center base-grid))
 
 (def state {
