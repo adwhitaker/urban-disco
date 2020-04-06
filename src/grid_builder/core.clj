@@ -48,9 +48,8 @@
 
 (defn rand-diff-group-neighbor [tile grid]
   (let [neighbors (find-different-groups tile grid)]
-    (if (not-empty neighbors)
-      (first (shuffle neighbors))
-      nil)))
+    (when (not-empty neighbors)
+      (first (shuffle neighbors)))))
 
 (defn unexplored-neighbors [tile grid]
   (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
@@ -63,9 +62,8 @@
 
 (defn unexplored-neighbor [tile grid]
   (let [neighbors (unexplored-neighbors tile grid)]
-    (if (not-empty neighbors)
-      (first (shuffle neighbors))
-      nil)))
+    (when (not-empty neighbors)
+      (first (shuffle neighbors)))))
 
 (defn remove-tile [unexplored tile]
   (reduce (fn [out item]
