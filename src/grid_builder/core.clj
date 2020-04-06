@@ -1,18 +1,10 @@
 (ns grid-builder.core
+  (:require [grid-builder.constants :as constants]
+            [grid-builder.tile :as :tile])
   (:gen-class))
 
-(def grid-height-width 5)
-
-(defn index [x y columns]
-  (if (or (< x 0) 
-          (< y 0) 
-          (> x (- columns 1)) 
-          (> y (- columns 1)))
-    -1
-    (+ (* y columns) x)))
-
 (defn update-direction [grid tile direction]
-  (let [t-index (index (:x tile) (:y tile) grid-height-width)]
+  (let [t-index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
     (assoc-in grid [t-index direction] true)))
 
 (defn remove-wall [grid a b]
@@ -32,10 +24,10 @@
   (= (:group a) (:group b)))
 
 (defn neighbor-indexes [tile grid]
- {:top    (index (:x tile)       (- (:y tile) 1) grid-height-width)
-  :right  (index (+ 1 (:x tile)) (:y tile)       grid-height-width)
-  :bottom (index (:x tile)       (+ 1 (:y tile)) grid-height-width)
-  :left   (index (- (:x tile) 1) (:y tile)       grid-height-width)})
+ {:top    (tile/index (:x tile)       (- (:y tile) 1) constants/default-grid-height)
+  :right  (tile/index (+ 1 (:x tile)) (:y tile)       constants/default-grid-height)
+  :bottom (tile/index (:x tile)       (+ 1 (:y tile)) constants/default-grid-height)
+  :left   (tile/index (- (:x tile) 1) (:y tile)       constants/default-grid-height)})
 
 (defn find-different-groups [tile grid]
   (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
@@ -89,7 +81,7 @@
   (unexplored-neighbor rand-cell grid))
 
 (defn update-group [grid tile group]
-  (let [t-index (index (:x tile) (:y tile) grid-height-width)]
+  (let [t-index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
     (assoc-in grid [t-index :group] group)))
 
 (defn join-groups [start goal grid]
