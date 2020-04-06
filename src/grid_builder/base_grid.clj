@@ -21,6 +21,6 @@
   ([height]
    (loop [rows (range height)
           grid []]
-     (if (empty? rows)
-       grid
-       (recur (drop 1 rows) (into grid (build-row height (first rows))))))))
+     (if (not-empty rows)
+       (recur (drop 1 rows) (into grid (build-row height (first rows))))
+       grid))))
