@@ -14,11 +14,13 @@
 
 (defn build-row [width row-number]
   (let [row (range width)]
-    (into [] (map #(build-cell % row-number) row))))
+    (map #(build-cell % row-number) row)))
 
 (defn build-grid
   ([] (build-grid constants/default-grid-height))
-  ([height] 
-   (let [grid (range height)]
-     (into [] (flatten (map #(build-row height %) grid))))))
-
+  ([height]
+   (loop [rows (range height)
+          grid []]
+     (if (empty? rows)
+       grid
+       (recur (drop 1 rows) (into grid (build-row height (first rows))))))))
