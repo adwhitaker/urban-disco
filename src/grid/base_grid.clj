@@ -1,5 +1,5 @@
-(ns grid-builder.base-grid
-  (:require [grid-builder.constants :as constants])
+(ns grid.base-grid
+  (:require [grid.constants :as constants])
   (:gen-class))
 
 (defn build-cell [x y] 

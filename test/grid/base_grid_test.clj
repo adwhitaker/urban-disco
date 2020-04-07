@@ -1,6 +1,6 @@
-(ns grid-builder.base-grid-test
+(ns grid.base-grid-test
   (:require [clojure.test :refer :all]
-            [grid-builder.base-grid :refer :all]))
+            [grid.base-grid :refer :all]))
 
 
 (deftest build-cell-test

@@ -1,6 +1,6 @@
-(ns grid-builder.core-test
+(ns grid.core-test
   (:require [clojure.test :refer :all]
-            [grid-builder.core :refer :all]))
+            [grid.core :refer :all]))
 
 (deftest nil-group-test
   (let [cell (build-cell 3 4)]

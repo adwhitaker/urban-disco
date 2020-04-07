@@ -1,6 +1,6 @@
 (ns urban-disco.core
-  (require [grid-builder.base-grid :as grid-builder]
-           [grid-builder.tile :as tile])
+  (require [grid.base-grid :as grid-builder]
+           [grid.tile :as tile])
   (:gen-class))
 
 (defn set-current-tile [state x y]

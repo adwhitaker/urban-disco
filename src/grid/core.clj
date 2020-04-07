@@ -1,6 +1,6 @@
-(ns grid-builder.core
-  (:require [grid-builder.constants :as constants]
-            [grid-builder.tile :as :tile])
+(ns grid.core
+  (:require [grid.constants :as constants]
+            [grid.tile :as :tile])
   (:gen-class))
 
 (defn update-direction [grid tile direction]
