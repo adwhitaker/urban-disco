@@ -6,6 +6,12 @@
 (defn center-tile [grid]
   (nth grid (-> grid count dec (/ 2) Math/ceil int)))
 
+(defn explore [grid x y]
+  (assoc-in grid [(index x y constants/default-grid-height) :explored] true))
+
+(defn get-tile [grid x y]
+  (nth grid (index x y constants/default-grid-height)))
+
 (defn remove-wall [grid tile direction]
   (let [tile-index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
     (assoc-in grid [tile-index direction] true)))

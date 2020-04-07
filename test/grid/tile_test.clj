@@ -15,16 +15,6 @@
     (is (= -1 (index 0 5 5)))
     (is (= -1 (index 0 10 5)))))
 
-(deftest get-tile-test
-  (let [grid (build-grid)]
-    (testing "returns expected tile"
-      (let [{:keys [x y]} (get-tile grid 3 0)]
-        (is (= 3 x))
-        (is (= 0 y)))
-      (let [{:keys [x y]} (get-tile grid 2 4)]
-        (is (= 2 x))
-        (is (= 4 y))))))
-
 (deftest explored?-test
   (testing "when explored is true, returns true"
    (let [tile (assoc-in (build-cell 2 2) [:explored] true)]
@@ -33,10 +23,6 @@
     (let [tile (build-cell 2 3)]
       (is (false? (explored? tile))))))
 
-(deftest explore-test
-  (testing "sets tile in grid as explored"
-    (let [grid (build-grid)]
-      (is (true? (explored? (get-tile (explore grid 3 3) 3 3)))))))
 
 (deftest nil-group?-test
   (testing "when group is nil, returns true"

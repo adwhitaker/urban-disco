@@ -10,9 +10,6 @@
     -1
     (+ (* y columns) x)))
 
-(defn get-tile [grid x y]
-  (nth grid (index x y constants/default-grid-height)))
-
 (defn explored? [tile]
   (get tile :explored))
 
@@ -21,6 +18,3 @@
 
 (defn same-group? [a b]
   (= (:group a) (:group b)))
-
-(defn explore [grid x y]
-  (assoc-in grid [(index x y constants/default-grid-height) :explored] true))
