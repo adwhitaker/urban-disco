@@ -1,5 +1,5 @@
 (ns grid.base-grid-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test   :refer :all]
             [grid.base-grid :refer :all]))
 
 

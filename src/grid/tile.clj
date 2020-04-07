@@ -13,12 +13,14 @@
 (defn get-tile [grid x y]
   (nth grid (index x y constants/default-grid-height)))
 
-(defn center-tile [grid]
-  (nth grid (-> grid count dec (/ 2) Math/ceil int)))
-
 (defn explored? [tile]
   (get tile :explored))
 
+(defn nil-group? [tile]
+  (nil? (:group tile)))
+
+(defn same-group? [a b]
+  (= (:group a) (:group b)))
+
 (defn explore [grid x y]
   (assoc-in grid [(index x y constants/default-grid-height) :explored] true))
-

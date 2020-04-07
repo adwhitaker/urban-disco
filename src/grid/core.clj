@@ -1,27 +1,8 @@
 (ns grid.core
   (:require [grid.constants :as constants]
-            [grid.tile :as :tile])
+            [grid.grid      :as grid]
+            [grid.tile      :as tile])
   (:gen-class))
-
-(defn update-direction [grid tile direction]
-  (let [t-index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
-    (assoc-in grid [t-index direction] true)))
-
-(defn remove-wall [grid a b]
-  "Removes the wall between two grid cells"
-  (let [x (- (:x a) (:x b))
-        y (- (:y a) (:y b))]
-    (cond
-      (= x 1)  (-> grid (update-direction a :left)  (update-direction b :right))
-      (= x -1) (-> grid (update-direction a :right) (update-direction b :left))
-      (= y 1)  (-> grid (update-direction a :up)    (update-direction b :down))
-      (= y -1) (-> grid (update-direction a :down)  (update-direction b :up)))))
-
-(defn nil-group? [tile]
-  (nil? (:group tile)))
-
-(defn same-group? [a b]
-  (= (:group a) (:group b)))
 
 (defn neighbor-indexes [tile grid]
  {:top    (tile/index (:x tile)       (- (:y tile) 1) constants/default-grid-height)
@@ -32,7 +13,7 @@
 (defn find-different-groups [tile grid]
   (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
     (reduce (fn [out neighbor-index]
-              (if (and (>= neighbor-index 0) (same-group? tile (nth grid neighbor-index)))
+              (if (and (>= neighbor-index 0) (tile/same-group? tile (nth grid neighbor-index)))
                 (conj out (nth grid neighbor-index))
                 out))
             []
@@ -46,7 +27,7 @@
 (defn unexplored-neighbors [tile grid]
   (let [{:keys [top right bottom left]} (neighbor-indexes tile grid)]
     (reduce (fn [out neighbor-index]
-              (if (and (>= neighbor-index 0) (nil-group? (nth grid neighbor-index)))
+              (if (and (>= neighbor-index 0) (tile/nil-group? (nth grid neighbor-index)))
                 (conj out (nth grid neighbor-index))
                 out))
             []
@@ -103,7 +84,7 @@
         (conj start st) 
         (conj goal gt) 
         (-> unexplored (remove-tile st) (remove-tile gt)) 
-        (-> gridz (update-group st :start) (update-group gt :goal) (remove-wall rand-st st) (remove-wall rand-gt gt)))))))
+        (-> gridz (update-group st :start) (update-group gt :goal) (grid/remove-neighboring-walls rand-st st) (grid/remove-neighboring-walls rand-gt gt)))))))
 
 
 (def start-tile {

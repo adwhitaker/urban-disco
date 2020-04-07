@@ -1,7 +1,7 @@
 (ns grid.tile-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test   :refer :all]
             [grid.base-grid :only ['build-grid 'build-cell]]
-            [grid.tile :refer :all]))
+            [grid.tile      :refer :all]))
 
 (deftest index-test
   (testing "when x and y are in bounds"
@@ -25,13 +25,6 @@
         (is (= 2 x))
         (is (= 4 y))))))
 
-(deftest center-tile-test
-  (let [grid (build-grid)]
-    (testing "returns center tile"
-      (let [{:keys [x y]} (center-tile grid)]
-        (is (= 2 x))
-        (is (= 2 x))))))
-
 (deftest explored?-test
   (testing "when explored is true, returns true"
    (let [tile (assoc-in (build-cell 2 2) [:explored] true)]
@@ -44,3 +37,9 @@
   (testing "sets tile in grid as explored"
     (let [grid (build-grid)]
       (is (true? (explored? (get-tile (explore grid 3 3) 3 3)))))))
+
+(deftest nil-group?-test
+  (testing "when group is nil, returns true"
+    (is (true? (nil-group? (build-cell 3 3)))))
+  (testing "when groupd is not nil, returns false"
+    (is (false? (nil-group? (assoc-in (build-cell 3 3) [:group] :start))))))
