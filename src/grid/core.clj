@@ -6,8 +6,6 @@
             [grid.neighbors :as neighbor])
   (:gen-class))
 
-(def pin 3)
-
 (defn generate-board [base-grid start-tile goal-tile]
   (loop [start      [start-tile]
          goal       [goal-tile]
