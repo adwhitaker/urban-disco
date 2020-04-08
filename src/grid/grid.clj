@@ -13,8 +13,10 @@
 
 (defn update-group [grid tile group]
   "Sets the group of a tile at a given position"
-  (let [index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
-    (assoc-in grid [index :group] group)))
+  (if (not (nil? tile))
+    (let [index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
+      (assoc-in grid [index :group] group))
+    grid))
 
 (defn get-tile [grid x y]
   "Returns the tile at the given coordinates from the grid"
@@ -27,22 +29,26 @@
 
 (defn remove-neighboring-walls [grid a b]
   "Removes the wall between two neighboring cells"
-  (let [x (- (:x a) (:x b))
-        y (- (:y a) (:y b))]
-    (cond
-      (= x  1) (-> grid (remove-wall a :left)  (remove-wall b :right))
-      (= x -1) (-> grid (remove-wall a :right) (remove-wall b :left))
-      (= y  1) (-> grid (remove-wall a :up)    (remove-wall b :down))
-      (= y -1) (-> grid (remove-wall a :down)  (remove-wall b :up)))))
+  (if (and (not (nil? a)) (not (nil? b)))
+    (let [x (- (:x a) (:x b))
+          y (- (:y a) (:y b))]
+      (cond
+        (= x  1) (-> grid (remove-wall a :left)  (remove-wall b :right))
+        (= x -1) (-> grid (remove-wall a :right) (remove-wall b :left))
+        (= y  1) (-> grid (remove-wall a :up)    (remove-wall b :down))
+        (= y -1) (-> grid (remove-wall a :down)  (remove-wall b :up))))
+    grid))
 
 (defn remove-tile [grid tile]
   "Removes a tile from the grid"
-  (reduce (fn [out cell]
-            (if (and (= (:x cell) (:x tile)) (= (:y cell) (:y tile)))
-              out
-              (conj out cell)))
-          []
-          grid))
+  (if (not (nil? tile))
+    (reduce (fn [out cell]
+              (if (and (= (:x cell) (:x tile)) (= (:y cell) (:y tile)))
+                out
+                (conj out cell)))
+            []
+            grid)
+    grid))
 
 (defn rand-tile [grid tiles filter-fn]
   "Returns a random tile from a filtered grid"

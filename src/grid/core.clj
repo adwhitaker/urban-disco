@@ -7,6 +7,7 @@
   (:gen-class))
 
 (defn generate-board [base-grid start-tile goal-tile]
+  "Generates game board"
   (loop [start      [start-tile]
          goal       [goal-tile]
          unexplored (-> base-grid (grid/remove-tile start-tile) (grid/remove-tile goal-tile))
@@ -18,7 +19,15 @@
             st (neighbor/rand-unexplored-neighbor final-grid start)
             gt (neighbor/rand-unexplored-neighbor final-grid goal)]
        (recur 
-        (conj start st) 
-        (conj goal gt) 
+        (if (not (nil? st)) 
+          (conj start st)
+          start) 
+        (if (not (nil? gt))
+          (conj goal gt)
+          goal) 
         (-> unexplored (grid/remove-tile st) (grid/remove-tile gt)) 
-        (-> final-grid (grid/update-group st :start) (grid/update-group gt :goal) (grid/remove-neighboring-walls rand-st st) (grid/remove-neighboring-walls rand-gt gt)))))))
+        (-> final-grid
+            (grid/update-group st :start) 
+            (grid/update-group gt :goal) 
+            (grid/remove-neighboring-walls rand-st st) 
+            (grid/remove-neighboring-walls rand-gt gt)))))))
