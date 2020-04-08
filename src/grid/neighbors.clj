@@ -4,7 +4,7 @@
             [grid.tile      :as tile])
   (:gen-class))
 
-(defn neighbor-indexes [grid tile]
+(defn neighbor-indexes [tile]
   "Calculates the position of all tile neighbors in a one-dimensional vector"
  {:top    (tile/index (:x tile)       (- (:y tile) 1) constants/default-grid-height)
   :right  (tile/index (+ 1 (:x tile)) (:y tile)       constants/default-grid-height)
@@ -13,7 +13,7 @@
 
 (defn all-unexplored-neighbors [grid tile]
   "Returns a vector of all unexplored neighbors"
-  (let [{:keys [top right bottom left]} (neighbor-indexes grid tile)]
+  (let [{:keys [top right bottom left]} (neighbor-indexes tile)]
     (reduce (fn [out neighbor-index]
               (if (and (>= neighbor-index 0) (tile/nil-group? (nth grid neighbor-index)))
                 (conj out (nth grid neighbor-index))
@@ -32,8 +32,8 @@
   (let [neighbors (all-unexplored-neighbors grid tile)]
     (not-empty neighbors)))
 
-(defn reduce-by-unexplored-neighbors [grid tiles]
-  "Determins what tiles from a vector has unexplored neighbors"
+(defn by-unexplored-neighbors [grid tiles]
+  "Determines what tiles from a vector has unexplored neighbors"
   (reduce (fn [out tile]
             (let [has-neighbors (unexplored-neighbors? grid tile)]
               (if (true? has-neighbors)

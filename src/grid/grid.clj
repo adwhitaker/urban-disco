@@ -50,6 +50,6 @@
             grid)
     grid))
 
-(defn rand-tile [grid tiles filter-fn]
+(defn rand-tile [grid filter-fn]
   "Returns a random tile from a filtered grid"
-  (rand-nth (filter-fn grid tiles)))
+  (rand-nth grid))
