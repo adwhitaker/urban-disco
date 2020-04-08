@@ -18,3 +18,14 @@
 
 (defn same-group? [a b]
   (= (:group a) (:group b)))
+
+(defn tiles->game-tiles [grid]
+  "converts a grid building tile to a game tile"
+  (into [] (map (fn [tile] {:x        (:x tile)
+                            :y        (:y tile)
+                            :explored false
+                            :up       (:up tile)
+                            :right    (:right tile)
+                            :down     (:down tile)
+                            :left     (:left tile)}))))
+
