@@ -5,33 +5,33 @@
             [grid.tile      :as tile])
   (:gen-class))
 
-(defn all-different-group-neighbors [grid tile]
-  (let [{:keys [top right bottom left]} (neighbor/neighbor-indexes grid tile)]
+(defn all-different-group-neighbors [grid tile group]
+  (let [{:keys [top right bottom left]} (neighbor/neighbor-indexes tile)]
     (reduce (fn [out neighbor-index]
-              (if (and (>= neighbor-index 0) (tile/same-group? tile (nth grid neighbor-index)))
+              (if (and (>= neighbor-index 0)
+                       (not (= group (:group (nth grid neighbor-index)))))
                 (conj out (nth grid neighbor-index))
                 out))
             []
             [top right bottom left])))
 
-
-(defn find-all-different-groups [grid tiles]
-    (reduce (fn [out tile]
-        (let [neighbors (all-different-group-neighbors grid tile)]
-            (if (not-empty neighbors)
-                (into out neighbors)
-                out))
-        []
-        tiles)))
+(defn find-all-different-groups [grid tiles group]
+  (into [] (set (flatten (reduce (fn [out tile]
+                                   (let [neighbors (all-different-group-neighbors grid tile group)]
+                                     (if (not-empty neighbors)
+                                       (conj out neighbors)
+                                       out)))
+                                 []
+                                 tiles)))))
 
 (defn remove-neighboring-wall [grid tile]
-    (let [neighbors (all-different-group-neighbors)]
+    (let [neighbors (all-different-group-neighbors grid tile :goal)]
         (if (not-empty neighbors)
             (grid/remove-neighboring-walls grid tile (first neighbors))
             grid)))
 
 (defn merge-groups [grid start goal]
-  (let [group-neighbors (find-all-different-groups grid start)
+  (let [group-neighbors (find-all-different-groups grid start :start)
         total-to-remove (-> group-neighbors count (* 80) (/ 100) Math/floor int)]
         (loop [i 0
                final-grid grid]

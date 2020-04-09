@@ -31,5 +31,6 @@
                             :up       (:up tile)
                             :right    (:right tile)
                             :down     (:down tile)
-                            :left     (:left tile)}))))
+                            :left     (:left tile)})
+                grid)))
 
