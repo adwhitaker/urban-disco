@@ -23,6 +23,9 @@
   "Compares two tiles groups"
   (= (:group a) (:group b)))
 
+(defn same-tile? [a b]
+  (and (= (:x a) (:x b)) (= (:y a) (:y b))))
+
 (defn tiles->game-tiles [grid]
   "converts a grid building tile to a game tile"
   (into [] (map (fn [tile] {:x        (:x tile)

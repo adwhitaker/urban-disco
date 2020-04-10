@@ -21,23 +21,28 @@
             []
             [top right bottom left])))
 
-(defn rand-unexplored-neighbor [grid tile]
-  "Returns a random unexplored neighbor, if available"
-  (let [neighbors (all-unexplored-neighbors grid tile)]
-    (when (not-empty neighbors)
-      (first (shuffle neighbors)))))
+(defn rand-unexplored-neighbor 
+  ([grid tile]
+   (rand-unexplored-neighbor grid tile nil))
+  ([grid tile second-tile]
+   (when (not (nil? tile))
+     (if (not (nil? second-tile))
+       (let [first-tile (rand-nth (all-unexplored-neighbors grid tile))]
+        (when (not (tile/same-tile? first-tile second-tile))
+          first-tile))   
+      (rand-nth (all-unexplored-neighbors grid tile))))))
 
-(defn unexplored-neighbors? [grid tile]
-  "Determines if tile has an unexplored neighbor"
-  (let [neighbors (all-unexplored-neighbors grid tile)]
-    (not-empty neighbors)))
 
 (defn by-unexplored-neighbors [grid tiles]
   "Determines what tiles from a vector has unexplored neighbors"
   (reduce (fn [out tile]
-            (let [has-neighbors (unexplored-neighbors? grid tile)]
-              (if (true? has-neighbors)
-                (conj out tile)
-                out)))
+            (if (pos? (count (all-unexplored-neighbors grid tile)))
+              (conj out tile)
+              out))
           []
           tiles))
+
+(defn rand-unexplored [grid tiles]
+  (let [unexplored (by-unexplored-neighbors grid tiles)]
+    (when (pos? (count unexplored))
+      (rand-nth unexplored))))
