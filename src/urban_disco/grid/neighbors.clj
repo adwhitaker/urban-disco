@@ -1,4 +1,4 @@
-(ns grid.neighbors
+(ns urban-disco.grid.neighbors
   (:require [grid.constants :as constants]
             [grid.grid      :as grid]
             [grid.tile      :as tile])
@@ -12,7 +12,6 @@
   :left   (tile/index (- (:x tile) 1) (:y tile)       constants/default-grid-height)})
 
 (defn all-unexplored-neighbors [grid tile]
-  "Returns a vector of all unexplored neighbors"
   (let [{:keys [top right bottom left]} (neighbor-indexes tile)]
     (reduce (fn [out neighbor-index]
               (if (and (>= neighbor-index 0) (tile/nil-group? (nth grid neighbor-index)))
@@ -34,7 +33,6 @@
 
 
 (defn by-unexplored-neighbors [grid tiles]
-  "Determines what tiles from a vector has unexplored neighbors"
   (reduce (fn [out tile]
             (if (pos? (count (all-unexplored-neighbors grid tile)))
               (conj out tile)

@@ -1,4 +1,4 @@
-(ns grid.group
+(ns urban-disco.grid.group
   (:require [grid.constants :as constants]
             [grid.neighbors :as neighbor]
             [grid.grid      :as grid]

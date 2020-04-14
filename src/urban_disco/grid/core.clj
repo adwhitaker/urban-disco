@@ -1,4 +1,4 @@
-(ns grid.core
+(ns urban-disco.grid.core
   (:require [grid.constants :as constants]
             [grid.grid      :as grid]
             [grid.tile      :as tile]
@@ -9,10 +9,10 @@
 
 
 (def base-grid (base/build-grid))
-(def starting (grid/get-tile base-grid 4 2))
-(def goaling (grid/get-tile base-grid 0 3))
+(def starting-tile (grid/get-tile base-grid 4 2))
+(def goal-tile (grid/get-tile base-grid 0 3))
 
-(defn gen2 [base-grid start-tile goal-tile]
+(defn generate-grid [base-grid start-tile goal-tile]
   (loop [start      [start-tile]
          goal       [goal-tile]
          unexplored (-> base-grid (grid/remove-tile start-tile) (grid/remove-tile goal-tile))

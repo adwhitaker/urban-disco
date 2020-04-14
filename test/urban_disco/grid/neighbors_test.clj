@@ -1,4 +1,4 @@
-(ns grid.neighbors-test
+(ns urban-disco.grid.neighbors-test
   (:require [clojure.test   :refer :all]
             [grid.grid      :refer :all]
             [grid.base-grid :as    builder]

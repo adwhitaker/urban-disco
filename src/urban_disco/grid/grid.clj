@@ -1,4 +1,4 @@
-(ns grid.grid
+(ns urban-disco.grid.grid
   (:require [grid.constants :as constants]
             [grid.tile      :as tile])
   (:gen-class))

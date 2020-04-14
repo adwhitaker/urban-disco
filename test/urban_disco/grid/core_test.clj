@@ -1,4 +1,4 @@
-(ns grid.core-test
+(ns urban-disco.grid.core-test
   (:require [clojure.test :refer :all]
             [grid.core    :refer :all]))
 

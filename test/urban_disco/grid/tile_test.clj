@@ -1,4 +1,4 @@
-(ns grid.tile-test
+(ns urban-disco.grid.tile-test
   (:require [clojure.test   :refer :all]
             [grid.base-grid :only ['build-grid 'build-cell]]
             [grid.tile      :refer :all]))
