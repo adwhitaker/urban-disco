@@ -16,8 +16,7 @@
   (loop [start      [start-tile]
          goal       [goal-tile]
          unexplored (-> base-grid (grid/remove-tile start-tile) (grid/remove-tile goal-tile))
-         final-grid base-grid
-         x nil]
+         final-grid base-grid]
     (if (not-empty unexplored)
       (let [rand-start           (neighbors/rand-unexplored final-grid start)
             rand-goal            (neighbors/rand-unexplored final-grid goal)
