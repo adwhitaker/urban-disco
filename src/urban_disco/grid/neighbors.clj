@@ -1,7 +1,7 @@
 (ns urban-disco.grid.neighbors
-  (:require [grid.constants :as constants]
-            [grid.grid      :as grid]
-            [grid.tile      :as tile])
+  (:require [urban-disco.grid.constants :as constants]
+            [urban-disco.grid.grid      :as grid]
+            [urban-disco.grid.tile      :as tile])
   (:gen-class))
 
 (defn neighbor-indexes [tile]

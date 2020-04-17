@@ -1,5 +1,5 @@
 (ns urban-disco.grid.base-grid
-  (:require [grid.constants :as constants])
+  (:require [urban-disco.grid.constants :as constants])
   (:gen-class))
 
 (defn build-tile [x y]

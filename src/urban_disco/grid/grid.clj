@@ -1,6 +1,6 @@
 (ns urban-disco.grid.grid
-  (:require [grid.constants :as constants]
-            [grid.tile      :as tile])
+  (:require [urban-disco.grid.constants :as constants]
+            [urban-disco.grid.tile      :as tile])
   (:gen-class))
 
 (defn center-tile [grid]
@@ -50,6 +50,3 @@
             grid)
     grid))
 
-(defn rand-tile [grid filter-fn]
-  "Returns a random tile from a filtered grid"
-  (rand-nth grid))

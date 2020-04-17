@@ -1,8 +1,8 @@
 (ns urban-disco.grid.group
-  (:require [grid.constants :as constants]
-            [grid.neighbors :as neighbor]
-            [grid.grid      :as grid]
-            [grid.tile      :as tile])
+  (:require [urban-disco.grid.constants :as constants]
+            [urban-disco.grid.neighbors :as neighbor]
+            [urban-disco.grid.grid      :as grid]
+            [urban-disco.grid.tile      :as tile])
   (:gen-class))
 
 (defn find-different-group-neighbors [grid tile group]

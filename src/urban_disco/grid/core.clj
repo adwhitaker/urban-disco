@@ -1,10 +1,10 @@
 (ns urban-disco.grid.core
-  (:require [grid.constants :as constants]
-            [grid.grid      :as grid]
-            [grid.tile      :as tile]
-            [grid.group     :as group]
-            [grid.neighbors :as neighbors]
-            [grid.base-grid :as base])
+  (:require [urban-disco.grid.constants :as constants]
+            [urban-disco.grid.grid      :as grid]
+            [urban-disco.grid.tile      :as tile]
+            [urban-disco.grid.group     :as group]
+            [urban-disco.grid.neighbors :as neighbors]
+            [urban-disco.grid.base-grid :as base])
   (:gen-class))
 
 
@@ -36,7 +36,6 @@
              (grid/update-group rand-start-neighbor :start) 
              (grid/update-group rand-goal-neighbor  :goal)
              (grid/remove-neighboring-walls rand-start rand-start-neighbor) 
-             (grid/remove-neighboring-walls rand-goal  rand-goal-neighbor))
-         rand-start-neighbor))
+             (grid/remove-neighboring-walls rand-goal  rand-goal-neighbor))))
       (group/merge-groups final-grid start goal)
       )))

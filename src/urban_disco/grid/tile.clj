@@ -1,5 +1,5 @@
 (ns urban-disco.grid.tile
-  (:require [grid.constants :as constants])
+  (:require [urban-disco.grid.constants :as constants])
   (:gen-class))
 
 (defn index [x y columns]
