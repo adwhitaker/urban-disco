@@ -7,11 +7,6 @@
             [urban-disco.grid.base-grid :as base])
   (:gen-class))
 
-
-(def base-grid (base/build-grid))
-(def starting-tile (grid/get-tile base-grid 4 2))
-(def goal-tile (grid/get-tile base-grid 0 3))
-
 (defn generate-grid [base-grid start-tile goal-tile]
   (loop [start      [start-tile]
          goal       [goal-tile]
