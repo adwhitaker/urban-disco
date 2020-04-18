@@ -22,7 +22,7 @@
   "Returns the tile at the given coordinates from the grid"
   (nth grid (tile/index x y constants/default-grid-height)))
 
-(defn- remove-wall [grid tile direction]
+(defn remove-wall [grid tile direction]
   "Removes a tile's wall from a given direction"
   (let [tile-index (tile/index (:x tile) (:y tile) constants/default-grid-height)]
     (assoc-in grid [tile-index direction] true)))
