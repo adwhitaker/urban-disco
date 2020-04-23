@@ -17,12 +17,11 @@
 
 (deftest explored?-test
   (testing "when explored is true, returns true"
-   (let [tile (assoc-in (build-tile 2 2) [:explored] true)]
-     (is (true? (explored? tile)))))
+    (let [tile (assoc-in (build-tile 2 2) [:explored] true)]
+      (is (true? (explored? tile)))))
   (testing "when explored is false, returns false"
     (let [tile (build-tile 2 3)]
       (is (false? (explored? tile))))))
-
 
 (deftest nil-group?-test
   (testing "when group is nil, returns true"

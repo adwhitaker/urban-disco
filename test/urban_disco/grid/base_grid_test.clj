@@ -2,7 +2,6 @@
   (:require [clojure.test   :refer :all]
             [urban-disco.grid.base-grid :refer :all]))
 
-
 (deftest build-tile-test
   (let [{:keys [x y up right down left explored group]} (build-tile 3 4)]
     (testing "when testing coordinates"

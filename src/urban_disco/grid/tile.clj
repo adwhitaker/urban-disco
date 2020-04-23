@@ -2,12 +2,13 @@
   (:require [urban-disco.grid.constants :as constants])
   (:gen-class))
 
-(defn index [x y columns]
+(defn index
   "Returns the index of the tile in a one-dimensional vector"
-  (if (or (< x 0) 
-          (< y 0) 
-          (> x (- columns 1)) 
-          (> y (- columns 1)))
+  [x y columns]
+  (if (or (neg? x)
+          (neg? y)
+          (> x (dec columns))
+          (> y (dec columns)))
     -1
     (+ (* y columns) x)))
 
@@ -24,12 +25,12 @@
   (and (= (:x a) (:x b)) (= (:y a) (:y b))))
 
 (defn tiles->game-tiles [grid]
-  (into [] (map (fn [tile] {:x        (:x tile)
-                            :y        (:y tile)
-                            :explored false
-                            :up       (:up tile)
-                            :right    (:right tile)
-                            :down     (:down tile)
-                            :left     (:left tile)})
-                grid)))
+  (vec (map (fn [tile] {:x        (:x tile)
+                        :y        (:y tile)
+                        :explored false
+                        :up       (:up tile)
+                        :right    (:right tile)
+                        :down     (:down tile)
+                        :left     (:left tile)})
+            grid)))
 

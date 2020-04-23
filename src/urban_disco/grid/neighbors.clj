@@ -4,12 +4,13 @@
             [urban-disco.grid.tile      :as tile])
   (:gen-class))
 
-(defn neighbor-indexes [tile]
+(defn neighbor-indexes
   "Calculates the position of all tile neighbors in a one-dimensional vector"
- {:top    (tile/index (:x tile)       (- (:y tile) 1) constants/default-grid-height)
-  :right  (tile/index (+ 1 (:x tile)) (:y tile)       constants/default-grid-height)
-  :bottom (tile/index (:x tile)       (+ 1 (:y tile)) constants/default-grid-height)
-  :left   (tile/index (- (:x tile) 1) (:y tile)       constants/default-grid-height)})
+  [tile]
+  {:top    (tile/index (:x tile)       (- (:y tile) 1) constants/default-grid-height)
+   :right  (tile/index (+ 1 (:x tile)) (:y tile)       constants/default-grid-height)
+   :bottom (tile/index (:x tile)       (+ 1 (:y tile)) constants/default-grid-height)
+   :left   (tile/index (- (:x tile) 1) (:y tile)       constants/default-grid-height)})
 
 (defn all-unexplored-neighbors [grid tile]
   (let [{:keys [top right bottom left]} (neighbor-indexes tile)]
@@ -20,17 +21,16 @@
             []
             [top right bottom left])))
 
-(defn rand-unexplored-neighbor 
+(defn rand-unexplored-neighbor
   ([grid tile]
    (rand-unexplored-neighbor grid tile nil))
   ([grid tile second-tile]
-   (when (not (nil? tile))
-     (if (not (nil? second-tile))
+   (when-not (nil? tile)
+     (if-not (nil? second-tile)
        (let [first-tile (rand-nth (all-unexplored-neighbors grid tile))]
-        (when (not (tile/same-tile? first-tile second-tile))
-          first-tile))   
-      (rand-nth (all-unexplored-neighbors grid tile))))))
-
+         (when-not (tile/same-tile? first-tile second-tile)
+           first-tile))
+       (rand-nth (all-unexplored-neighbors grid tile))))))
 
 (defn by-unexplored-neighbors [grid tiles]
   (reduce (fn [out tile]

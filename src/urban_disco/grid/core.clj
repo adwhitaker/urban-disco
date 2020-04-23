@@ -18,18 +18,18 @@
             rand-start-neighbor  (neighbors/rand-unexplored-neighbor final-grid rand-start)
             rand-goal-neighbor   (neighbors/rand-unexplored-neighbor final-grid rand-goal rand-start-neighbor)]
         (recur
-         (if (not (nil? rand-start-neighbor))
+         (if-not (nil? rand-start-neighbor)
            (conj start rand-start-neighbor)
            start)
-         (if (not (nil? rand-goal-neighbor))
+         (if-not (nil? rand-goal-neighbor)
            (conj goal rand-goal-neighbor)
            goal)
          (-> unexplored
              (grid/remove-tile rand-start-neighbor)
-             (grid/remove-tile rand-goal-neighbor)) 
+             (grid/remove-tile rand-goal-neighbor))
          (-> final-grid
-             (grid/update-group rand-start-neighbor :start) 
+             (grid/update-group rand-start-neighbor :start)
              (grid/update-group rand-goal-neighbor  :goal)
-             (grid/remove-neighboring-walls rand-start rand-start-neighbor) 
+             (grid/remove-neighboring-walls rand-start rand-start-neighbor)
              (grid/remove-neighboring-walls rand-goal  rand-goal-neighbor))))
       (group/merge-groups final-grid start goal))))

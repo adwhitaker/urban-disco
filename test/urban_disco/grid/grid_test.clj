@@ -1,7 +1,7 @@
-(ns urban-disco.grid.tile-test
+(ns urban-disco.grid.grid-test
   (:require [clojure.test               :refer :all]
             [urban-disco.grid.grid      :refer :all]
-            [urban-disco.grid.base-grid :only  ['build-grid 'build-tile]]
+            [urban-disco.grid.base-grid :refer  [build-grid build-tile]]
             [urban-disco.grid.tile      :as    tile]))
 
 (deftest center-tile-test
@@ -24,30 +24,27 @@
 (deftest remove-wall-test
   (testing "sets tile direction to true"
     (let [grid (build-grid)]
-      (is (true? (:up    (get-tile (remove-wall grid (build-tile 3 3) :up   ) 3 3))))
+      (is (true? (:up    (get-tile (remove-wall grid (build-tile 3 3) :up) 3 3))))
       (is (true? (:right (get-tile (remove-wall grid (build-tile 3 3) :right) 3 3))))
-      (is (true? (:down  (get-tile (remove-wall grid (build-tile 3 3) :down ) 3 3))))
-      (is (true? (:left  (get-tile (remove-wall grid (build-tile 3 3) :left ) 3 3)))))))
-
+      (is (true? (:down  (get-tile (remove-wall grid (build-tile 3 3) :down) 3 3))))
+      (is (true? (:left  (get-tile (remove-wall grid (build-tile 3 3) :left) 3 3)))))))
 
 (deftest explore-test
   (testing "sets tile in grid as explored"
     (let [grid (build-grid)]
       (is (true? (tile/explored? (get-tile (explore grid 3 3) 3 3)))))))
 
-
 (deftest update-group-test
   (testing "updates grid with group"
     (let [grid           (build-grid)
           tile-to-update (get-tile grid 3 3)]
-      (is (= 
-           :start 
+      (is (=
+           :start
            (:group (get-tile (update-group grid tile-to-update :start) 3 3))))))
   (testing "returns grid if tile is nil"
     (let [grid           (build-grid)
           tile-to-update (get-tile grid 3 3)]
       (is (nil? (:group (get-tile (update-group grid nil :start) 3 3)))))))
-
 
 (deftest remove-neighboring-walls-test
   (testing "when tile a is null, grid is not updated"
@@ -71,7 +68,7 @@
       (is (false? left))
       (is (false? right))))
   (testing "removes wall to the :up"
-     (let [grid          (build-grid)
+    (let [grid          (build-grid)
           a              (get-tile grid 2 2)
           b              (get-tile grid 2 1)
           updated-grid   (remove-neighboring-walls grid a b)
@@ -80,7 +77,7 @@
       (is (true? up))
       (is (true? down))))
   (testing "removes wall to the :down"
-     (let [grid          (build-grid)
+    (let [grid          (build-grid)
           a              (get-tile grid 2 2)
           b              (get-tile grid 2 1)
           updated-grid   (remove-neighboring-walls grid b a)
@@ -106,7 +103,6 @@
           {:keys [right]} (get-tile updated-grid 1 2)]
       (is (true? left))
       (is (true? right)))))
-
 
 (deftest remove-tile-test
   (let [grid           [(build-tile 0 0) (build-tile 0 1)]
