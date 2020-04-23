@@ -11,11 +11,10 @@
 (def game-grid         (generate-grid base-grid starting-tile goal-tile))
 (def starting-position (get-tile game-grid 2 4))
 
-(def state {
-            :grid             game-grid
+(def state {:grid             game-grid
             :current-position starting-position})
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (println "Future game!"))

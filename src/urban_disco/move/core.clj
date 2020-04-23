@@ -18,13 +18,13 @@
 
 (defn move [state direction]
   (let [{:keys [x y]} (get-in state [:current-position])]
-   (case direction
-     :up
-     (move-position state :up    x       (- y 1))
-     :down
-     (move-position state :down  x       (+ y 1))
-     :left
-     (move-position state :left  (- x 1) y)
-     :right
-     (move-position state :right (+ x 1) y)
-     state)))
+    (case direction
+      :up
+      (move-position state :up    x       (dec y))
+      :down
+      (move-position state :down  x       (inc y))
+      :left
+      (move-position state :left  (dec x) y)
+      :right
+      (move-position state :right (dec x) y)
+      state)))
