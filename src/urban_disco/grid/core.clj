@@ -32,5 +32,4 @@
              (grid/update-group rand-goal-neighbor  :goal)
              (grid/remove-neighboring-walls rand-start rand-start-neighbor) 
              (grid/remove-neighboring-walls rand-goal  rand-goal-neighbor))))
-      (group/merge-groups final-grid start goal)
-      )))
+      (group/merge-groups final-grid start goal))))
